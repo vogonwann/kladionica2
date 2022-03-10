@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -106,9 +105,8 @@ namespace Kladionica.Models
             }
 
             var zemlja = new Zemlja(zemljaNaziv, kvota, kontinent);
-
-            double ocekivanaIsplata = uplata * kvota;
-            return new Igrac(uplata, zemlja, ime, prezime, datum, ocekivanaIsplata);
+            
+            return new Igrac(uplata, zemlja, ime, prezime, datum);
         }
     }
 }
