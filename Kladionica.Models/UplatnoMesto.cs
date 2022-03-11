@@ -16,12 +16,12 @@ namespace Kladionica.Models
         public string Grad { get; set; }
         public List<Igrac> SpisakIgraca { get; set; }
 
-        public UplatnoMesto()
+        public UplatnoMesto() // konstruktor koji inicijalizuje listu igraca
         {
             SpisakIgraca = new List<Igrac>();
-        }
+        } 
 
-        public UplatnoMesto(string adresa, string grad) : this()
+        public UplatnoMesto(string adresa, string grad) : this() // pozivanje konstruktora bez parametara koji inicijalizuje listu igraca
         {
             Adresa = adresa;
             Grad = grad;
@@ -30,10 +30,10 @@ namespace Kladionica.Models
         public string DajPodatke()
         {
             var adresaSplit = Adresa.Split(" ");
-            var adresaBezBroja = string.Join(" ", adresaSplit.Take(adresaSplit.Length - 1));
-            var samoglasnici = "[aeiou]";
-            var gradBezSamoglasnika = Regex.Replace(Grad, samoglasnici, "", RegexOptions.IgnoreCase).ToUpperInvariant();
-            var ukupnaUplata = SpisakIgraca.Sum(t => t.IznosUplate);
+            var adresaBezBroja = string.Join(" ", adresaSplit.Take(adresaSplit.Length - 1)); // uzmi sve sem posledenjeg elementa niza (broj) i Join sa space
+            var samoglasnici = "[aeiou ]"; // pattern za regex, koji sklanja samoglasnike i space (Novi Sad = NVSD)
+            var gradBezSamoglasnika = Regex.Replace(Grad, samoglasnici, "", RegexOptions.IgnoreCase).ToUpperInvariant(); // regexom zameni sve karaktere iz patterna za Grad praznim karakterom ("") i zanemari case
+            var ukupnaUplata = SpisakIgraca.Sum(t => t.IznosUplate); // prodji kroz spisak igraca i Sum njihov IznosUplate
             return $"{adresaBezBroja} {gradBezSamoglasnika}, Ukupna uplata: {ukupnaUplata}";
         }
 
@@ -42,16 +42,16 @@ namespace Kladionica.Models
             if (!(DateTime.Now.Year - noviIgrac.DatumRodjenja.Year >= 18))
             {
                 Console.WriteLine("Igrac mora biti punoletan!");
-                return;
+                return; // ako nije punoletan nemoj dodavati igraca
             }
 
             if (!(noviIgrac.IznosUplate >= 50 && noviIgrac.IznosUplate <= 100000))
             {
                 Console.WriteLine("Uplata od {0} dinara nije korektna!", noviIgrac.IznosUplate);
-                return;
+                return; // ako nije korektna uplata nemoj dodavati igraca
             }
 
-            SpisakIgraca.Add(noviIgrac);
+            SpisakIgraca.Add(noviIgrac); // ako su svi uslovi ispunjeni, dodaj igraca
         }
 
         public Igrac UcitajIgraca()
@@ -66,19 +66,19 @@ namespace Kladionica.Models
             var datumString = Console.ReadLine();
             var datum = DateTime.ParseExact(datumString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-            bool pogresanUnosUplate = true;
-            int uplata = 0;
-            while (pogresanUnosUplate)
+            bool pogresanUnosUplate = true; // pretpostavljamo da je unos pogresan
+            int uplata = 0; // out parametar TryParse metode
+            while (pogresanUnosUplate) // vrti se while dokle pogresanUnosUplate nije false
             {
                 Console.WriteLine("Molimo unesite uplatu igraca:");
                 var uplataString = Console.ReadLine();
-                if (int.TryParse(uplataString, out uplata))
+                if (int.TryParse(uplataString, out uplata)) // ako je unos moguce parsirati u string, upisi u "uplata" i izadji iz petlje
                 {
                     pogresanUnosUplate = false;
                 }
                 else
                 {
-                    Console.WriteLine("Pogresan unos! Molimo pokusajte ponovo:");
+                    Console.WriteLine("Pogresan unos! Molimo pokusajte ponovo:"); // ako je unos pogresan, zatraziti ponovni unos
                 }
             }
 
@@ -86,27 +86,27 @@ namespace Kladionica.Models
             string zemljaNaziv = Console.ReadLine();
             Console.WriteLine("Molimo unesite kontinent:");
             string kontinetNaziv = Console.ReadLine();
-            Kontinent kontinent;
-            Enum.TryParse(kontinetNaziv, out kontinent);
+            Kontinent kontinent; // out parametar TryParse metode
+            Enum.TryParse(kontinetNaziv, out kontinent); // pretvori string u Kontinetnt enum; u slucaju pogresnog unosa vratice prvi element enumeracije
             bool pogresanUnosKvote = true;
-            double kvota = 0;
+            double kvota = 0; // out parametar TryParse metode
             while (pogresanUnosKvote)
             {
                 Console.WriteLine("Molimo unesite kvotu za zemlju:");
                 var kvotaString = Console.ReadLine();
-                if (double.TryParse(kvotaString, out kvota))
+                if (double.TryParse(kvotaString, out kvota)) // ako je unos moguce parsirati u double, upisi u "kvota" i izadji iz petlje
                 {
                     pogresanUnosKvote = false;
                 }
                 else
                 {
-                    Console.WriteLine("Pogresan unos! Molimo pokusajte ponovo:");
+                    Console.WriteLine("Pogresan unos! Molimo pokusajte ponovo:"); // ako je unos pogresan, zatraziti ponovni unos
                 }
             }
 
-            var zemlja = new Zemlja(zemljaNaziv, kvota, kontinent);
+            var zemlja = new Zemlja(zemljaNaziv, kvota, kontinent); // zemlja na koju se igrac kladi, parametar ctra klase Igrac
             
-            return new Igrac(uplata, zemlja, ime, prezime, datum);
+            return new Igrac(uplata, zemlja, ime, prezime, datum); // vraca novokreiranog igraca
         }
     }
 }
