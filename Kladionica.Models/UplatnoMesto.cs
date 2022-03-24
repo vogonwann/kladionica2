@@ -51,7 +51,28 @@ namespace Kladionica.Models
                 return;
             }
 
-            SpisakIgraca.Add(noviIgrac);
+            int indexIgracaSaIstomZemljom = 0;
+            for (var i = 0; i < SpisakIgraca.Count; i++)
+            {
+                var igrac = SpisakIgraca[i];
+                if (noviIgrac.Ime == igrac.Ime &&
+                    noviIgrac.Prezime == igrac.Prezime &&
+                    noviIgrac.DatumRodjenja == igrac.DatumRodjenja &&
+                    noviIgrac.OdabranaZemlja.Naziv == igrac.OdabranaZemlja.Naziv)
+                {
+                    indexIgracaSaIstomZemljom = i;
+                    break;
+                }
+            }
+
+            if (indexIgracaSaIstomZemljom != -1)
+            {
+                SpisakIgraca[indexIgracaSaIstomZemljom] = noviIgrac;
+            }
+            else
+            {
+                SpisakIgraca.Add(noviIgrac);
+            }
         }
 
         public Igrac UcitajIgraca()
